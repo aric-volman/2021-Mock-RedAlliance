@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-//import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
@@ -14,25 +13,22 @@ import frc.robot.Constants;
 
 public class DriveTrain extends SubsystemBase {
 
-  private static final WPI_TalonSRX _leftDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.LeftDriveTalonPort);
-  private static final WPI_TalonSRX _rightDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.RightDriveTalonPort);
+  private static final WPI_TalonSRX leftDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.LeftDriveTalonPort);
+  private static final WPI_TalonSRX rightDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.RightDriveTalonPort);
 
-  private DifferentialDrive _diffDrive;
+  private DifferentialDrive diffDrive;
 
 
   /** Creates a new DriveTrain. */
   public DriveTrain() {
-    // _leftDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.LeftDriveTalonPort);
-    // _rightDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.RightDriveTalonPort);
 
-    _leftDriveTalon.setInverted(false);
-    _rightDriveTalon.setInverted(false);
+    leftDriveTalon.setInverted(false);
+    rightDriveTalon.setInverted(false);
 
-    _leftDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
-    _rightDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
+    leftDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
+    rightDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
 
-    _diffDrive = new DifferentialDrive(_leftDriveTalon, _rightDriveTalon);
-
+    diffDrive = new DifferentialDrive(leftDriveTalon, rightDriveTalon);
 
   }
 
@@ -42,9 +38,13 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
-    _diffDrive.tankDrive(leftSpeed, rightSpeed);
+    diffDrive.tankDrive(leftSpeed, rightSpeed);
   }
-  public double getCombinedAverageVelocityInRotationsPerSecond(){
-    return (_leftDriveTalon.getSelectedSensorVelocity() + _rightDriveTalon.getSelectedSensorVelocity())/8192.0;
+  public double getAverageEncoderPosition() {
+    return (leftDriveTalon.getSelectedSensorPosition() + rightDriveTalon.getSelectedSensorPosition())/2.0;
+  }
+  public void resetEncoders() {
+    leftDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
+    rightDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
   }
 }

@@ -1,70 +1,55 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.commands.SetVelocity;
 
-public class DriveLine extends CommandBase {
-  /** Creates a new TimedDrive. */
-  private static DriveTrain driveTrain;
-  private final Timer timer;
-  private double velocity;
-  private double distance;
-  private double time;
+public class DriveLine extends CommandBase{
+    
+    private final DriveTrain driveTrain;
 
-  /*
-   * Converting meters to rotations involves dividing by (2.5/2)^2*pi/39.37, which
-   * is 0.124, so divide 1 by 0.124, which is now 8.02 rotations per meter
-   */
-  public DriveLine(DriveTrain dt, double v, double d) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    driveTrain = dt;
-    timer = new Timer();
-    distance = d;
-    velocity = v;
-    time = (8.02 * distance) / velocity;
-    addRequirements(driveTrain);
-  }
+    private final double wheelDiameterInInches = 2.5;
+    private final double rotationsPerMeter = 1.0/(wheelDiameterInInches*0.0254*Math.PI);
 
-  public static double getAverageVelocity() {
-    return driveTrain.getCombinedAverageVelocityInRotationsPerSecond();
-  }
+    private final double givenPower;
+    private final double calculatedEncoderTicks;
+    private final double distance;
+    public DriveLine(DriveTrain dt, double p, double d) { 
+        driveTrain = dt; 
+        givenPower = p;
+        distance = d;
+        /*
 
-  public static void setPower(double p) {
-    driveTrain.tankDrive(p, p);
-  }
+        Explanation:
+        2.5 inches is the wheel's diameter. The conversion factor 
+        from inches to meters is around 0.0254. We can get the 
+        circumference in meters this way. If we divide the total 
+        unit of length (1.0 meter) by this, we can get the rotations 
+        required in a meter, which turns out to be 5.01275411 rotations.
+        If we know the number of rotations per meter, the distance in meters, 
+        and the number of ticks per rotation, we can find the number of ticks 
+        per distance in meters.
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    timer.start();
-    timer.reset();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    if (timer.get() <= time) {
-      SetVelocity.set(velocity);
-    } else {
-      SetVelocity.set(0.0);
-      // driveTrain.tankDrive(0, 0);
+        */
+        calculatedEncoderTicks = 4096.0*rotationsPerMeter*distance;
+        addRequirements(driveTrain);
     }
-  }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-/*
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return (timer.get() >= 5);
-  
-}*/
+    @Override
+    public void initialize() {
+        driveTrain.resetEncoders();
+    }
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+      if (driveTrain.getAverageEncoderPosition() <= calculatedEncoderTicks) {
+            driveTrain.tankDrive(givenPower, givenPower);
+        } else {
+            driveTrain.tankDrive(0.0, 0.0);
+        }
+    }
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }
