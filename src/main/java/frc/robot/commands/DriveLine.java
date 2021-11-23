@@ -1,24 +1,25 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveTrain;
 
 public class DriveLine extends CommandBase{
     
     private final DriveTrain driveTrain;
 
-    private final double wheelDiameterInInches = 2.5;
-    private final double rotationsPerMeter = 1.0/(wheelDiameterInInches*0.0254*Math.PI);
-
     private final double givenPower;
     private final double calculatedEncoderTicks;
     private final double distance;
+    private boolean finished;
+
     public DriveLine(DriveTrain dt, double p, double d) { 
         driveTrain = dt; 
         givenPower = p;
         distance = d;
-        /*
+        finished = false;
 
+        /*
         Explanation:
         2.5 inches is the wheel's diameter. The conversion factor 
         from inches to meters is around 0.0254. We can get the 
@@ -28,9 +29,9 @@ public class DriveLine extends CommandBase{
         If we know the number of rotations per meter, the distance in meters, 
         and the number of ticks per rotation, we can find the number of ticks 
         per distance in meters.
-
         */
-        calculatedEncoderTicks = 4096.0*rotationsPerMeter*distance;
+        
+        calculatedEncoderTicks = Constants.DriveToLineConstants.rotationsPerMeterByTicks*distance;
         addRequirements(driveTrain);
     }
 
@@ -46,10 +47,13 @@ public class DriveLine extends CommandBase{
             driveTrain.tankDrive(givenPower, givenPower);
         } else {
             driveTrain.tankDrive(0.0, 0.0);
+            finished = true;
         }
     }
     @Override
+    public void end(boolean interrupted) {}
+    @Override
     public boolean isFinished() {
-        return false;
+        return finished;
     }
 }
