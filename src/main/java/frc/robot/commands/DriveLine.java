@@ -24,10 +24,10 @@ public class DriveLine extends CommandBase{
         2.5 inches is the wheel's diameter. The conversion factor 
         from inches to meters is around 0.0254. We can get the 
         circumference in meters this way. If we divide the total 
-        unit of length (1.0 meter) by this, we can get the rotations 
-        required in a meter, which turns out to be 5.01275411 rotations.
-        If we know the number of rotations per meter, the distance in meters, 
-        and the number of ticks per rotation, we can find the number of ticks 
+        unit of length (1.0 meter) by this, we get the rotations per 
+        1 meter, which turns out to be 5.01275411 rotations per meter.
+        If we know the number of rotations per meter, the number of ticks per rotation, 
+        and the distance in meters, we can find the number of ticks 
         per distance in meters.
         */
         
