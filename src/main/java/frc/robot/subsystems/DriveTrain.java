@@ -16,7 +16,6 @@ public class DriveTrain extends SubsystemBase {
 
   private static final WPI_TalonSRX leftDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.LeftDriveTalonPort);
   private static final WPI_TalonSRX rightDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.RightDriveTalonPort);
-
   // private DifferentialDrive diffDrive;
 
 
@@ -46,7 +45,8 @@ public class DriveTrain extends SubsystemBase {
   public double getAverageEncoderPosition() {
     return (leftDriveTalon.getSelectedSensorPosition() + rightDriveTalon.getSelectedSensorPosition())/2.0;
   }
-  public void resetEncoders() {
+  public void resetEncoders() { 
+    // TODO - Figure out if an encoder reset is possible
     leftDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
     rightDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
   }

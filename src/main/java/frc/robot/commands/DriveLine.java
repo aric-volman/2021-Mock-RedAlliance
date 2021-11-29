@@ -17,7 +17,6 @@ public class DriveLine extends CommandBase{
         driveTrain = dt; 
         givenPower = p;
         distance = d;
-        finished = false;
 
         /*
         Explanation:
@@ -38,6 +37,8 @@ public class DriveLine extends CommandBase{
     @Override
     public void initialize() {
         driveTrain.resetEncoders();
+        // The constructor runs once, initialize() runs every schedule, so this resets it (finished).
+        finished = false;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
