@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-// import edu.wpi.first.wpilibj.Joystick;
+ import edu.wpi.first.wpilibj.Joystick;
 // import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveTrain;
-// import frc.robot.commands.TankDrive;
+import frc.robot.commands.TankDrive;
 import frc.robot.commands.DriveLine;
 
 /**
@@ -24,29 +24,30 @@ import frc.robot.commands.DriveLine;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+
   private final DriveTrain driveTrain;
   private final DriveLine driveLine;
   SendableChooser<Command> chooser = new SendableChooser<>();
-  // private final Joystick leftJoystick;
-  // private final Joystick rightJoystick;
-  // private final TankDrive tankDrive;
 
-  // private final DriveLine driveLine;
+  private final Joystick leftJoystick;
+  private final Joystick rightJoystick;
+  private final TankDrive tankDrive;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
     driveTrain = new DriveTrain();
     // Autonomous Showcase Portion
-    driveLine = new DriveLine(driveTrain, 0.1, 2.0);
+    driveLine = new DriveLine(driveTrain, 0.3, 2.0);
     // SendableChooser
-    chooser.addOption("Drive to Line.", driveLine);
+    chooser.addOption("Drive to Line", driveLine);
     SmartDashboard.putData(chooser);
     // Teleop Portion
-    // leftJoystick = new Joystick(Constants.USBOrder.Zero);
-    // rightJoystick = new Joystick(Constants.USBOrder.One);
-    // tankDrive = new TankDrive(driveTrain, leftJoystick, rightJoystick);
+    leftJoystick = new Joystick(Constants.USBOrder.Zero);
+    rightJoystick = new Joystick(Constants.USBOrder.One);
+    tankDrive = new TankDrive(driveTrain, leftJoystick, rightJoystick);
    
-    // driveTrain.setDefaultCommand(tankDrive);
+    driveTrain.setDefaultCommand(tankDrive);
     // Configure the button bindings
     configureButtonBindings();
 

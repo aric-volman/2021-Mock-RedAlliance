@@ -1,16 +1,18 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveTrain;
 
-public class DriveLine extends CommandBase{
+public class DriveLine extends CommandBase {
     
-    private final DriveTrain driveTrain;
+    private DriveTrain driveTrain;
 
-    private final double givenPower;
-    private final double calculatedEncoderTicks;
-    private final double distance;
+    // Note: For anything that's not an object, don't use final with DiffDrive
+    private double givenPower;
+    private double calculatedEncoderTicks;
+    private double distance;
     private boolean finished;
 
     public DriveLine(DriveTrain dt, double p, double d) { 
@@ -37,22 +39,25 @@ public class DriveLine extends CommandBase{
     @Override
     public void initialize() {
         driveTrain.resetEncoders();
-        // The constructor runs once, initialize() runs every schedule, so this resets it (finished).
+        // Note: The constructor runs once, initialize() runs every schedule, so this resets it (finished).
         finished = false;
+        SmartDashboard.putString("Status", "Starting");
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
       if (driveTrain.getAverageEncoderPosition() <= calculatedEncoderTicks) {
+          SmartDashboard.putString("Status", "In Progress");
             driveTrain.tankDrive(givenPower, givenPower);
         } else {
             driveTrain.tankDrive(0.0, 0.0);
             finished = true;
+            SmartDashboard.putString("Status", "Finished");
         }
     }
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {driveTrain.tankDrive(0.0, 0.0);}
     @Override
     public boolean isFinished() {
         return finished;
