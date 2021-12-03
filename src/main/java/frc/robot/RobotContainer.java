@@ -38,7 +38,7 @@ public class RobotContainer {
     
     driveTrain = new DriveTrain();
     // Autonomous Showcase Portion
-    driveLine = new DriveLine(driveTrain, 0.3, 2.0);
+    driveLine = new DriveLine(driveTrain, 0.1, 2.0);
     // SendableChooser
     chooser.addOption("Drive to Line", driveLine);
     SmartDashboard.putData(chooser);

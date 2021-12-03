@@ -41,14 +41,14 @@ public class DriveLine extends CommandBase {
         driveTrain.resetEncoders();
         // Note: The constructor runs once, initialize() runs every schedule, so this resets it (finished).
         finished = false;
-        SmartDashboard.putString("Status", "Starting");
+        // SmartDashboard.putString("Status", "Starting");
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
       if (driveTrain.getAverageEncoderPosition() <= calculatedEncoderTicks) {
-          SmartDashboard.putString("Status", "In Progress");
+            SmartDashboard.putString("Status", "In Progress");
             driveTrain.tankDrive(givenPower, givenPower);
         } else {
             driveTrain.tankDrive(0.0, 0.0);
