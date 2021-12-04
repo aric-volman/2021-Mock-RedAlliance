@@ -6,14 +6,16 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
- import edu.wpi.first.wpilibj.Joystick;
-// import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj.Joystick;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.DriveLine;
+import frc.robot.commands.MultiplePaths;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,27 +29,36 @@ public class RobotContainer {
 
   private final DriveTrain driveTrain;
   private final DriveLine driveLine;
-  SendableChooser<Command> chooser = new SendableChooser<>();
+  private final MultiplePaths multiplePaths;
 
   private final Joystick leftJoystick;
   private final Joystick rightJoystick;
   private final TankDrive tankDrive;
 
+  SendableChooser<Command> chooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
     driveTrain = new DriveTrain();
+
     // Autonomous Showcase Portion
-    driveLine = new DriveLine(driveTrain, 0.1, 2.0);
+    driveLine = new DriveLine(driveTrain, 0.3, 2.0);
+    multiplePaths = new MultiplePaths(driveTrain);
+
     // SendableChooser
     chooser.addOption("Drive to Line", driveLine);
+    chooser.addOption("Multiple Paths", multiplePaths);
+
     SmartDashboard.putData(chooser);
+
     // Teleop Portion
     leftJoystick = new Joystick(Constants.USBOrder.Zero);
     rightJoystick = new Joystick(Constants.USBOrder.One);
     tankDrive = new TankDrive(driveTrain, leftJoystick, rightJoystick);
    
     driveTrain.setDefaultCommand(tankDrive);
+    
     // Configure the button bindings
     configureButtonBindings();
 

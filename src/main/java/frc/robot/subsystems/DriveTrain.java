@@ -8,14 +8,21 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 
 public class DriveTrain extends SubsystemBase {
 
   private WPI_TalonSRX leftDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.LeftDriveTalonPort);
   private WPI_TalonSRX rightDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.RightDriveTalonPort);
+  
+  private AHRS navx = new AHRS(SPI.Port.kMXP);
 
+  private double circumference = 1;
 
   /** Creates a new DriveTrain. */
   public DriveTrain() {
@@ -41,7 +48,27 @@ public class DriveTrain extends SubsystemBase {
     return (leftDriveTalon.getSelectedSensorPosition() + rightDriveTalon.getSelectedSensorPosition())/2.0;
   }
   public void resetEncoders() { 
-    leftDriveTalon.setSelectedSensorPosition(0.0);
-    rightDriveTalon.setSelectedSensorPosition(0.0);
+    leftDriveTalon.setSelectedSensorPosition(0.0, 0, 10);
+    rightDriveTalon.setSelectedSensorPosition(0.0, 0, 10);
+  }
+
+  // Part of MultiplePaths - DriveTrain Methods
+  // Credit where it's due: karenlyuan, anikay1807, krishshah13
+  
+  public double getPosition() {
+    return ((leftDriveTalon.getSelectedSensorPosition() + rightDriveTalon.getSelectedSensorPosition())/2) * (circumference/4096);
+    //average distance of both left and right
+  }
+
+  public double getVelocity(){
+    return ((leftDriveTalon.getSensorCollection().getPulseWidthVelocity() + rightDriveTalon.getSensorCollection().getPulseWidthVelocity())/2) * (circumference/4096);
+  }
+
+  public double getAngle() {
+    return navx.getAngle();
+  }
+
+  public void navxReset() {
+    navx.reset();
   }
 }
