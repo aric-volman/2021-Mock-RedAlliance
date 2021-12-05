@@ -6,7 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.DriveLine;
+import frc.robot.commands.PIDTurn;
 import frc.robot.commands.MultiplePaths;
 
 /**
@@ -29,6 +30,7 @@ public class RobotContainer {
 
   private final DriveTrain driveTrain;
   private final DriveLine driveLine;
+  private final PIDTurn turnNine;
   private final MultiplePaths multiplePaths;
 
   private final Joystick leftJoystick;
@@ -43,12 +45,14 @@ public class RobotContainer {
     driveTrain = new DriveTrain();
 
     // Autonomous Showcase Portion
-    driveLine = new DriveLine(driveTrain, 0.3, 2.0);
+    driveLine = new DriveLine(driveTrain, 0.4, 2.0);
+    turnNine = new PIDTurn(driveTrain, 90.0);
     multiplePaths = new MultiplePaths(driveTrain);
 
     // SendableChooser
     chooser.addOption("Drive to Line", driveLine);
     chooser.addOption("Multiple Paths", multiplePaths);
+    chooser.addOption("Turn 90 degrees", turnNine);
 
     SmartDashboard.putData(chooser);
 
@@ -70,7 +74,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    //JoystickButton joystickDriveToLine = new JoystickButton(leftJoystick, 6);
+    //joystickDriveToLine.whenPressed(driveLine);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

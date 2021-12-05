@@ -12,6 +12,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+// import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 import frc.robot.Constants;
 
@@ -20,6 +21,8 @@ public class DriveTrain extends SubsystemBase {
   private WPI_TalonSRX leftDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.LeftDriveTalonPort);
   private WPI_TalonSRX rightDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.RightDriveTalonPort);
   
+  //private DifferentialDrive diffDrive = new DifferentialDrive(leftDriveTalon, rightDriveTalon);
+
   private AHRS navx = new AHRS(SPI.Port.kMXP);
 
   private double circumference = 1;
@@ -28,10 +31,13 @@ public class DriveTrain extends SubsystemBase {
   public DriveTrain() {
 
     leftDriveTalon.setInverted(false);
-    rightDriveTalon.setInverted(false);
+    rightDriveTalon.setInverted(true);
 
     leftDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     rightDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+
+    leftDriveTalon.setSensorPhase(true);
+    rightDriveTalon.setSensorPhase(true);
 
   }
 
@@ -43,6 +49,7 @@ public class DriveTrain extends SubsystemBase {
   public void tankDrive(double leftSpeed, double rightSpeed) {
     rightDriveTalon.set(ControlMode.PercentOutput, rightSpeed);
     leftDriveTalon.set(ControlMode.PercentOutput, leftSpeed);
+    //diffDrive.tankDrive(leftSpeed, rightSpeed);
   }
   public double getAverageEncoderPosition() {
     return (leftDriveTalon.getSelectedSensorPosition() + rightDriveTalon.getSelectedSensorPosition())/2.0;

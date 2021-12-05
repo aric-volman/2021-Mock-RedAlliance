@@ -70,7 +70,7 @@ public class Turn extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return d.getAngle() > angle;
+    return Math.abs(d.getAngle()) > angle;
   }
 
 }

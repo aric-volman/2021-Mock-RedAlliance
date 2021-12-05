@@ -34,7 +34,7 @@ public final class Constants {
     }
 
     public static final class DriveToLineConstants {
-        public static final double wheelDiameterInInches = 2.5;
+        public static final double wheelDiameterInInches = 6.0;
         public static final double rotationsPerMeterByTicks = (1.0/(wheelDiameterInInches*0.0254*Math.PI))*4096.0;
     }
 }
