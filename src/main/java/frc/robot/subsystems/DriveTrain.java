@@ -12,7 +12,6 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-// import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 import frc.robot.Constants;
 
@@ -20,8 +19,6 @@ public class DriveTrain extends SubsystemBase {
 
   private WPI_TalonSRX leftDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.LeftDriveTalonPort);
   private WPI_TalonSRX rightDriveTalon = new WPI_TalonSRX(Constants.DriveTrainPorts.RightDriveTalonPort);
-  
-  //private DifferentialDrive diffDrive = new DifferentialDrive(leftDriveTalon, rightDriveTalon);
 
   private AHRS navx = new AHRS(SPI.Port.kMXP);
 
@@ -49,7 +46,6 @@ public class DriveTrain extends SubsystemBase {
   public void tankDrive(double leftSpeed, double rightSpeed) {
     rightDriveTalon.set(ControlMode.PercentOutput, rightSpeed);
     leftDriveTalon.set(ControlMode.PercentOutput, leftSpeed);
-    //diffDrive.tankDrive(leftSpeed, rightSpeed);
   }
   public double getAverageEncoderPosition() {
     return (leftDriveTalon.getSelectedSensorPosition() + rightDriveTalon.getSelectedSensorPosition())/2.0;
@@ -77,5 +73,26 @@ public class DriveTrain extends SubsystemBase {
 
   public void navxReset() {
     navx.reset();
+  }
+
+  // For DriveDistance to work
+  private double getLeftEncoderCount() {
+    return leftDriveTalon.getSelectedSensorPosition();
+  }
+
+  private double getRightEncoderCount() {
+    return rightDriveTalon.getSelectedSensorPosition();
+  }
+
+  private double getAverageEncoderCount() {
+    return (getLeftEncoderCount() + getRightEncoderCount()) / 2.0;
+  }
+
+  public double getAverageDisplacement() {
+    return getAverageEncoderCount() * Constants.DriveToLineConstants.MetersPerEncoderTick;
+  }
+
+  public void zeroDisplacement() {
+    resetEncoders();
   }
 }

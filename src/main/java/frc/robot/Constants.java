@@ -34,7 +34,14 @@ public final class Constants {
     }
 
     public static final class DriveToLineConstants {
+        // For DriveLine
         public static final double wheelDiameterInInches = 6.0;
         public static final double rotationsPerMeterByTicks = (1.0/(wheelDiameterInInches*0.0254*Math.PI))*4096.0;
+        // For DriveDistance
+        public static final double MetersPerInch = 0.0254;
+        public static final double WheelCircumferenceMeters = wheelDiameterInInches * Math.PI * 0.0254;
+        public static final double EncoderTicksPerRevolution = 4096.0;
+        public static final double EncoderTicksPerMeter = ((1 / MetersPerInch) / (wheelDiameterInInches * Math.PI)) * EncoderTicksPerRevolution;
+        public static final double MetersPerEncoderTick = WheelCircumferenceMeters / EncoderTicksPerRevolution;
     }
 }

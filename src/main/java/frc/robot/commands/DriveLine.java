@@ -2,36 +2,37 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.Constants;
 
 public class DriveLine extends CommandBase {
     
     private DriveTrain driveTrain;
 
     private double givenPower;
-    private double calculatedEncoderTicks;
+    private double totalEncoderTicksNeeded;
     private double distance;
     private boolean finished;
 
-    public DriveLine(DriveTrain dt, double p, double d) { 
+    public DriveLine(DriveTrain dt, double d, double p) { 
         driveTrain = dt; 
-        givenPower = p;
+        givenPower = (d >= 0.0 ? 1.0 : -1.0) * Math.abs(p);
         distance = d;
 
         /*
         Explanation:
         6 inches is the wheel's diameter. The conversion factor 
         from inches to meters is around 0.0254. We can get the 
-        circumference in meters this way. If we divide the total 
-        unit of length (1.0 meter) by this, we get the rotations per 
+        circumference in meters this way by multiplying by pi
+        and the conversion ratio. If we divide the total unit of 
+        length (1.0 meter) by this circumference, we get the rotations per 
         1 meter, which turns out to be 2.08864755 rotations per meter.
         If we know the number of rotations per meter, the number of ticks per rotation, 
         and the distance in meters, we can find the number of ticks 
         per distance in meters.
         */
         
-        calculatedEncoderTicks = Constants.DriveToLineConstants.rotationsPerMeterByTicks*distance;
+        totalEncoderTicksNeeded = Constants.DriveToLineConstants.rotationsPerMeterByTicks*distance;
         addRequirements(driveTrain);
     }
 
@@ -46,9 +47,9 @@ public class DriveLine extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-      if (driveTrain.getAverageEncoderPosition() <= calculatedEncoderTicks) {
+      if (Math.abs(driveTrain.getAverageEncoderPosition()) <= Math.abs(totalEncoderTicksNeeded)) {
             SmartDashboard.putString("Status", "In Progress");
-            SmartDashboard.putNumber("Position", driveTrain.getAverageEncoderPosition());
+            SmartDashboard.putNumber("Encoder Position", driveTrain.getAverageEncoderPosition());
             driveTrain.tankDrive(givenPower, givenPower);
         } else {
             driveTrain.tankDrive(0.0, 0.0);

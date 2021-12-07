@@ -18,16 +18,15 @@ public class Turn extends CommandBase {
 
   private DriveTrain d;
   private double angle;
-  private double error;
-  private double speed;
+  private double power;
   private int constant = 1;
 
   /** Creates a new EncoderDrive. */
-  public Turn(DriveTrain d, double angle, double speed) {
+  public Turn(DriveTrain d, double angle, double power) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.d = d;
     this.angle = angle;
-    this.speed = speed;
+    this.power = power;
 
     if(angle < 0) {
       constant = -1;
@@ -46,31 +45,19 @@ public class Turn extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    error = angle - d.getAngle();
-    error = error / angle;
-    speed = error * 0.7;
-
-    if(speed > 0.7) {
-      speed = 0.7;
-    }
-
-    if (speed < 0.1) {
-      speed = 0.1;
-    }
-
-    d.tankDrive(constant * speed, -constant * speed);
+    d.tankDrive(constant * Math.abs(power), -constant * Math.abs(power));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    d.tankDrive(0, 0);
+    d.tankDrive(0.0, 0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(d.getAngle()) > angle;
+    return (Math.abs(d.getAngle()) >= Math.abs(angle));
   }
 
 }
