@@ -2,50 +2,43 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-// Part of MultiplePaths - Forward Command
+// Part of MultiplePaths - Turn Command
 // Credit where it's due: karenlyuan, anikay1807, krishshah13
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
-import com.kauailabs.navx.frc.AHRS;
 
 public class Turn extends CommandBase {
 
-  private AHRS navx = new AHRS(SPI.Port.kMXP);
-
   private DriveTrain d;
   private double angle;
-  private double power;
-  private int constant = 1;
+  private double constant = 0.01;
 
   /** Creates a new EncoderDrive. */
-  public Turn(DriveTrain d, double angle, double power) {
+  public Turn(DriveTrain d, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.d = d;
     this.angle = angle;
-    this.power = power;
-
-    if(angle < 0) {
-      constant = -1;
-    }
-
+    //this.power = (angle >= 0 ? power : power*-1.0);
+    //this.power = power;
     addRequirements(d);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    navx.reset();
+    d.navxReset();
   }
 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    d.tankDrive(constant * Math.abs(power), -constant * Math.abs(power));
+    double error = angle - d.getAngle();
+    double power = error * constant;
+    d.tankDrive(power, -1.0 * power);
   }
 
   // Called once the command ends or is interrupted.
@@ -57,7 +50,7 @@ public class Turn extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(d.getAngle()) >= Math.abs(angle));
+    return (Math.abs(d.getAngle() - angle) <= 0.1);
   }
 
 }

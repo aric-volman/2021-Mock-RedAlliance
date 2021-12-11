@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -33,14 +34,15 @@ public class DriveTrain extends SubsystemBase {
     leftDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     rightDriveTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 
-    leftDriveTalon.setSensorPhase(true);
-    rightDriveTalon.setSensorPhase(true);
+    //leftDriveTalon.setSensorPhase(true);
+    //rightDriveTalon.setSensorPhase(true);
 
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Navx angle", getAngle());
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -76,15 +78,15 @@ public class DriveTrain extends SubsystemBase {
   }
 
   // For DriveDistance to work
-  private double getLeftEncoderCount() {
+  public double getLeftEncoderCount() {
     return leftDriveTalon.getSelectedSensorPosition();
   }
 
-  private double getRightEncoderCount() {
+  public double getRightEncoderCount() {
     return rightDriveTalon.getSelectedSensorPosition();
   }
 
-  private double getAverageEncoderCount() {
+  public double getAverageEncoderCount() {
     return (getLeftEncoderCount() + getRightEncoderCount()) / 2.0;
   }
 

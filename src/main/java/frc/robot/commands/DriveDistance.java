@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DriveTrain;
 
 public class DriveDistance extends CommandBase {
@@ -38,6 +39,7 @@ public class DriveDistance extends CommandBase {
   @Override
   public void execute() {
     if(Math.abs(_driveTrain.getAverageDisplacement()) < Math.abs(_distance)) {
+      SmartDashboard.putNumber("Average Displacement", Math.abs(_driveTrain.getAverageDisplacement()));
       _driveTrain.tankDrive(_drivespeed, _drivespeed);
     }
     else {

@@ -61,6 +61,7 @@ public class RobotContainer {
     turnNinetyPID = new PIDTurn(driveTrain, -90.0, turnPower);
     turnNine = new Turn(driveTrain, -90.0, turnPower);
     gameData = DriverStation.getInstance().getGameSpecificMessage();
+    /*
     if (gameData.length() > 0) {
       switch (gameData.charAt(0)) {
         case 'B' :
@@ -92,7 +93,11 @@ public class RobotContainer {
           multiplePaths = new SequentialCommandGroup();
           break;
       }
-    }
+    }*/
+    multiplePaths = new SequentialCommandGroup(
+      new DriveDistance(driveTrain, 0.5, drivePower),
+      new Turn(driveTrain, -90.0, turnPower),
+      new DriveDistance(driveTrain, -0.5, drivePower));
     // SendableChooser
     chooser.addOption("Drive Distance", driveDistance);
     chooser.addOption("Drive To Line", driveLine);
@@ -132,6 +137,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return chooser.getSelected();
+    return driveLine;
   }
 }

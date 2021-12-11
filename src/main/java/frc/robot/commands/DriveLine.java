@@ -12,11 +12,12 @@ public class DriveLine extends CommandBase {
     private double givenPower;
     private double totalEncoderTicksNeeded;
     private double distance;
-    private boolean finished;
+    private boolean finished = false;
 
     public DriveLine(DriveTrain dt, double d, double p) { 
         driveTrain = dt; 
-        givenPower = (d >= 0.0 ? 1.0 : -1.0) * Math.abs(p);
+        // givenPower = (d >= 0.0 ? 1.0 : -1.0) * Math.abs(p);
+        givenPower = p;
         distance = d;
 
         /*
@@ -38,7 +39,7 @@ public class DriveLine extends CommandBase {
 
     @Override
     public void initialize() {
-        driveTrain.resetEncoders();
+        //driveTrain.resetEncoders();
         // Note: The constructor runs once, initialize() runs every schedule, so this resets it (finished).
         finished = false;
         SmartDashboard.putString("Status", "Starting");
@@ -47,10 +48,16 @@ public class DriveLine extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-      if (Math.abs(driveTrain.getAverageEncoderPosition()) <= Math.abs(totalEncoderTicksNeeded)) {
+       // if (Math.abs(driveTrain.getAverageEncoderPosition()) <= Math.abs(totalEncoderTicksNeeded)) {
+        double tickOutput = (driveTrain.getRightEncoderCount() + driveTrain.getLeftEncoderCount())/2.0;
+        if (tickOutput <= totalEncoderTicksNeeded) {
             SmartDashboard.putString("Status", "In Progress");
-            SmartDashboard.putNumber("Encoder Position", driveTrain.getAverageEncoderPosition());
+            SmartDashboard.putNumber("Encoder Position", tickOutput);
+            SmartDashboard.putNumber("Target Ticks", totalEncoderTicksNeeded);
+            System.out.println(totalEncoderTicksNeeded);
+            System.out.println(tickOutput);
             driveTrain.tankDrive(givenPower, givenPower);
+            tickOutput = (driveTrain.getRightEncoderCount() + driveTrain.getLeftEncoderCount())/2.0;
         } else {
             driveTrain.tankDrive(0.0, 0.0);
             finished = true;
