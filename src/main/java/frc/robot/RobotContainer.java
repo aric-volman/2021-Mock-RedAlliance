@@ -59,7 +59,7 @@ public class RobotContainer {
     driveLine = new DriveLine(driveTrain, 2.0, drivePower);
     driveDistance = new DriveDistance(driveTrain, 2.0, drivePower);
     turnNinetyPID = new PIDTurn(driveTrain, -90.0, turnPower);
-    turnNine = new Turn(driveTrain, -90.0, turnPower);
+    turnNine = new Turn(driveTrain, -90.0);
     gameData = DriverStation.getInstance().getGameSpecificMessage();
     /*
     if (gameData.length() > 0) {
@@ -96,7 +96,7 @@ public class RobotContainer {
     }*/
     multiplePaths = new SequentialCommandGroup(
       new DriveDistance(driveTrain, 0.5, drivePower),
-      new Turn(driveTrain, -90.0, turnPower),
+      new Turn(driveTrain, -90.0),
       new DriveDistance(driveTrain, -0.5, drivePower));
     // SendableChooser
     chooser.addOption("Drive Distance", driveDistance);
